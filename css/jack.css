@@ -1,0 +1,31 @@
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  text-transform: none; /* Remove capitalisation */
+}
+
+/* Charts */
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #555;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+/*  display: none; */
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.axis text {
+    font: 23px sans-serif;
+    fill: #555;
+}

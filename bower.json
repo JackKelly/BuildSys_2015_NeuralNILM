@@ -1,0 +1,7 @@
+{
+  "name": "Neural-NILM",
+  "dependencies": {
+    "d3": "3.5.6",
+    "reveal.js": "3.1.0"
+  }
+}
