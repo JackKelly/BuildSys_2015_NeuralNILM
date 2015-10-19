@@ -2,7 +2,7 @@ var pt = pt || {};
 
 pt.plotPowerData = pt.plotPowerData || {};
 
-pt.margin = {top: 20, right: 30, bottom: 30, left: 50};
+pt.margin = {top: 20, right: 30, bottom: 30, left: 100};
 pt.outer_width = 960;
 pt.outer_height = 500;
 pt.inner_width = pt.outer_width - pt.margin.left - pt.margin.right;
@@ -13,7 +13,7 @@ pt.plotPowerData.svg = null;
 pt.plotPowerData.init = function() {
     'use strict';
 
-    pt.plotPowerData.x = d3.time.scale().range([0, pt.inner_width]);
+    pt.plotPowerData.x = d3.scale.linear().range([0, pt.inner_width]);
 
     pt.plotPowerData.y = d3.scale.linear().range([pt.inner_height, 0]);
 
@@ -30,8 +30,8 @@ pt.plotPowerData.init = function() {
        and returns a set of paths.
     */
     pt.plotPowerData.lineFunction = d3.svg.line()
-        .x(function(d) { return pt.plotPowerData.x(d.date); })
-        .y(function(d) { return pt.plotPowerData.y(d.close); });
+        .x(function(d) { return pt.plotPowerData.x(d.seconds); })
+        .y(function(d) { return pt.plotPowerData.y(d.watts); });
 
     pt.plotPowerData.svg = d3.select('#washer .placeholder')
         .append('svg')
@@ -45,24 +45,18 @@ pt.plotPowerData.init = function() {
 
 pt.plotPowerData.axes = function(error, data) {
     'use strict';
-
-    var parseDate = d3.time.format("%d-%b-%y").parse;
     
     if (error) {
         return pt.displayError(error);
     }
 
-    data.reverse();
-
-    var data2 = [];
     data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.close = +d.close;  // coerce to number type.
-        data2.push({date: d.date, close: d.close+50});
+        d.seconds = +d.seconds;
+        d.watts = +d.watts;  // coerce to number type.
     });
     
-    pt.plotPowerData.x.domain(d3.extent(data, function(d) { return d.date; }));
-    pt.plotPowerData.y.domain(d3.extent(data, function(d) { return d.close; }));
+    pt.plotPowerData.x.domain(d3.extent(data, function(d) { return d.seconds; }));
+    pt.plotPowerData.y.domain(d3.extent(data, function(d) { return d.watts; }));
 
     // X AXIS
     pt.plotPowerData.chart.append("g")
@@ -75,30 +69,28 @@ pt.plotPowerData.axes = function(error, data) {
         .attr("class", "y axis")
         .call(pt.plotPowerData.yAxis)
       .append("text")
+        .attr("y", -100)
+        .attr("x", -pt.inner_height/2)
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
         .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Price ($)");
+        .style("text-anchor", "middle")
+        .text("Power (watts)");
+
+    pt.plotPowerData.chart.append("path")
+        .attr("class", "line");
 };
 
 
 pt.plotPowerData.update = function(error, data) {
     'use strict';
-
-    var parseDate = d3.time.format("%d-%b-%y").parse;
     
     if (error) {
         return pt.displayError(error);
     }
 
-    data.reverse();
-
-    var data2 = [];
     data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.close = +d.close;  // coerce to number type.
-        data2.push({date: d.date, close: d.close+50});
+        d.seconds = +d.seconds;
+        d.watts = +d.watts;  // coerce to number type.
     });
 
     // Interpolation function
@@ -119,19 +111,30 @@ pt.plotPowerData.update = function(error, data) {
     }
     
     // ADD LINE
-    pt.plotPowerData.path1 = pt.plotPowerData.chart.append("path")
-        .attr("class", "line")
+    pt.plotPowerData.path1 = pt.plotPowerData.chart.select("path.line")
         .attr("d", pt.plotPowerData.lineFunction(data[0]))
       .transition()
-        .duration(10000)
+        .duration(1000)
         .ease("linear")
         .attrTween("d", pathTweenGenerator(data));
-
-    pt.plotPowerData.path2 = pt.plotPowerData.chart.append("path")
-        .attr("class", "line")
-        .attr("d", pt.plotPowerData.lineFunction(data2[0]))
-      .transition()
-        .duration(5000)
-        .ease("linear")
-        .attrTween("d", pathTweenGenerator(data2));        
 };
+
+pt.plotPowerData.morph = function(error, data) {
+    'use strict';
+    
+    if (error) {
+        return pt.displayError(error);
+    }
+
+    data.forEach(function(d) {
+        d.seconds = +d.seconds;
+        d.watts = +d.watts;  // coerce to number type.
+    });
+    
+    // ADD LINE
+    pt.plotPowerData.chart.select("path.line")
+      .transition()
+        .duration(500)
+        .ease("linear")
+        .attr("d", pt.plotPowerData.lineFunction(data))
+}

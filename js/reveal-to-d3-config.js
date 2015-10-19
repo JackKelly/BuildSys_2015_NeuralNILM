@@ -8,11 +8,15 @@ pt.slideIdToFunctions = {
         },
         '-1': function() {
             'use strict';
-            d3.tsv('data.tsv', pt.plotPowerData.axes);
-        },        
+            d3.csv('data/washer_raw.csv', pt.plotPowerData.axes);
+        },
         0: function() {
             'use strict';
-            d3.tsv('data.tsv', pt.plotPowerData.update);
+            d3.csv('data/washer_steady_states.csv', pt.plotPowerData.update);            
+        },
+        1: function() {
+            'use strict';
+            d3.csv('data/washer_raw.csv', pt.plotPowerData.morph);
         }
     }
 };
