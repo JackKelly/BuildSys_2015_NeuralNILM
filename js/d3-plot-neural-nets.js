@@ -1,4 +1,5 @@
 var pt = pt || {};
+var RECURRENT_DURATION = 250;
 
 pt.plotNeuralNet = pt.plotNeuralNet || {};
 
@@ -18,9 +19,9 @@ pt.plotNeuralNet.init = function(cssID) {
     pt.plotNeuralNet.svg = svg;
 };
 
-pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, recurrentLayers) {
+pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
     'use strict';
-    var recurrentLayers = recurrentLayers || [];
+    pt.plotNeuralNet.numUnitsPerLayer = numUnitsPerLayer;
 
     var w = pt.outerWidth,
         h = pt.outerHeight,
@@ -51,8 +52,9 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, recurrentLay
         .charge(-5)
         .size([pt.outerWidth, pt.outerHeight]);
 
-    var dx = 100, dy = 50, radius=10;
+    var dx = 100, dy = dy || 50, radius=10;
     var nodes = force.nodes();
+    pt.plotNeuralNet.nodes = nodes;    
 
     var numLayers = numUnitsPerLayer.length;
     var maxUnits = d3.max(numUnitsPerLayer);
@@ -146,28 +148,11 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, recurrentLay
                     layer++;
                     if (layer == numLayers-1) {
                         clearInterval(timer);
-                        addRecurrentConnections();
                         addLabels();
                     }
                 }
             }
         }                
-    }
-
-    // Recurrent Layers
-    function addRecurrentConnections() {
-        if (recurrentLayers) {
-            var timer = setInterval(addRecurrentConnection, 50);
-        }
-        var recurrentLayerI = 0, unit = 0, dstUnit = 0;  
-        function addRecurrentConnection() {
-            var layer = recurrentLayers[recurrentLayerI];
-            var numUnits = numUnitsPerLayer[layer];
-            var srcNode = getNode(layer, unit);
-            var dstNode = getNode(layer, dstUnit);
-            
-            // Increment counters
-        }                        
     }
     
     // Labels
@@ -202,8 +187,9 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, recurrentLay
         for (var i=0; i<layer; i++) {
             nodeI += numUnitsPerLayer[i];
         }
-        return nodes[nodeI];
+        return pt.plotNeuralNet.nodes[nodeI];
     }
+    pt.plotNeuralNet.getNode = getNode;
     
     function fill(d) {
       return color(d.layer);
@@ -211,64 +197,34 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, recurrentLay
     
 };
 
-pt.plotRecurrent = pt.plotRecurrent || {};
 
-var bezier = [],
-    points = [
-        {x: 20, y: 250},
-        {x: 20, y: 30},
-        {x: 100, y: 20},
-        {x: 200, y: 250},
-        {x: 225, y: 125}
-    ],
-    delta = .01,
-    t = .5;
-
-
-pt.plotRecurrent.plot = function() {
-    /* From: http://bl.ocks.org/joyrexus/5715642
-     */
-
+function plotBezier(points, svg, id) {
+    /* Adapted from: http://bl.ocks.org/joyrexus/5715642 */
     
-    'use strict';
-
-    var w = pt.outerWidth,
-        h = pt.outerHeight;
-//        n = 4,
-//        orders = d3.range(5, n + 2);
-
-/*    
-    var svg = d3.select("#recurrent .placeholder").selectAll("svg")
-        .data(orders)
-      .enter().append("svg:svg")
-        .attr("width", w)
-        .attr("height", h)
-      .append("svg:g")
-        .attr("transform", "translate(0,0)");
-*/
-    var svg = d3.select("#recurrent .placeholder").append("svg")
-        .attr("width", w)
-        .attr("height", h);
+    var bezier = [],
+        delta = .01,
+        t = .0,        
+        n = points.length;
     
     var line = d3.svg.line().x(x).y(y);
-    var curve = svg.append("path").attr("class", "curve");
+    var curve = svg.append("path").attr("class", "curve").attr("id", id);
 
     update();
     var last = 0;
     d3.timer(function(elapsed) {
-        t = (t + (elapsed - last) / 1000) % 1;
+        t = t + (elapsed - last) / RECURRENT_DURATION;
         last = elapsed;
         update();
     });
     
     function update() {
-        svg.select("path.curve").attr("d", line(getCurve()));
+        svg.select("#"+id).attr("d", line(getCurve()));
     }
 
     function getCurve() {
         if (bezier.length == 0) {
             for (var t_=0; t_<=1; t_+=delta) {
-                var x = getLevels(5, t_);
+                var x = getLevels(n, t_);
                 bezier.push(x[x.length-1][0]);
             }
         }
@@ -303,4 +259,48 @@ pt.plotRecurrent.plot = function() {
 
     function x(d) { return d.x; }
     function y(d) { return d.y; }
+}
+
+pt.plotNeuralNet.plotRecurrent = function(recurrentLayers) {    
+    'use strict';
+
+    var svg = pt.plotNeuralNet.svg.select("g.lines");
+    if (recurrentLayers) {
+        var timer = setInterval(addRecurrentConnection, RECURRENT_DURATION);
+    }
+    var recurrentLayerI = 0, srcUnit = 0, dstUnit = 0;  
+    function addRecurrentConnection() {
+        var layer = +recurrentLayers[recurrentLayerI];
+        var numUnits = pt.plotNeuralNet.numUnitsPerLayer[layer];
+        var srcNode = pt.plotNeuralNet.getNode(layer, srcUnit);
+        var dstNode = pt.plotNeuralNet.getNode(layer, dstUnit);
+
+        var points = [
+            {x: srcNode.x, y: srcNode.y},
+            {x: srcNode.x + 50, y: srcNode.y - 20},
+            {x: srcNode.x + 50, y: dstNode.y + 30},
+            {x: dstNode.x, y: dstNode.y}
+        ];
+
+        var id = "layer" + layer + "srcUnit" + srcUnit + "dstUnit" + dstUnit;
+        plotBezier(points, svg, id);
+        svg.select("#"+id)
+            .transition()
+            .duration(1000)
+            .style("stroke", "#555");
+        
+        // Increment counters
+        dstUnit++;
+        if (dstUnit == numUnits) {
+            dstUnit = 0;
+            srcUnit++;
+            if (srcUnit == numUnits){
+                srcUnit = 0;
+                recurrentLayerI++;
+                if (recurrentLayerI >= recurrentLayers.length) {
+                    clearInterval(timer);
+                }
+            }
+        }
+    }                            
 };

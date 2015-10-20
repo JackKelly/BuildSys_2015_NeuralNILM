@@ -28,6 +28,7 @@ pt.slideIdToFunctions = {
             'use strict';
             var numUnitsPerLayer = [7, 7, 5, 5, 3];
             pt.plotNeuralNet.plot(numUnitsPerLayer, "Hidden Layers");
+            pt.plotNeuralNet.svg = null;            
         }        
     },    
     'autoencoder': {
@@ -39,16 +40,24 @@ pt.slideIdToFunctions = {
             'use strict';
             var numUnitsPerLayer = [7, 5, 3, 5, 7];            
             pt.plotNeuralNet.plot(numUnitsPerLayer, "Code Layer");
-        }        
+            pt.plotNeuralNet.svg = null;            
+        }
     },
     'recurrent': {
         'init': function() {
             'use strict';
-            // pt.plotNeuralNet.init('#recurrent');
+            pt.plotNeuralNet.init('#recurrent');
         },
         0: function() {
             'use strict';
-            pt.plotRecurrent.plot();
-        }
+            var numUnitsPerLayer = [1, 5, 5, 3, 1];
+            var dy = 70;
+            pt.plotNeuralNet.plot(numUnitsPerLayer, "Recurrent Layers", dy);
+        },
+        1: function() {
+            'use strict';
+            pt.plotNeuralNet.plotRecurrent([1,2]);
+            pt.plotNeuralNet.svg = null;
+        }        
     }        
 };
