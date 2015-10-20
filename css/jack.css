@@ -29,3 +29,16 @@
     font: 23px sans-serif;
     fill: #555;
 }
+
+
+/* Neural Nets */
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}

@@ -7,8 +7,8 @@ pt.plotNeuralNets.svg = null;
 pt.plotNeuralNets.init = function() {
     'use strict';
 
-    var width = pt.outerWidth;
-    var height = pt.outerHeight;
+    var w = pt.outerWidth;
+    var h = pt.outerHeight;
     
     var svg = d3.select('#neural-net-1 .placeholder')
         .append('svg')
@@ -17,46 +17,78 @@ pt.plotNeuralNets.init = function() {
 
     pt.plotNeuralNets.svg = svg;
     
-    var color = d3.scale.category20();
+    var color = d3.scale.category10();
 
     var force = d3.layout.force()
-        .charge(-120)
-        .linkDistance(30)
-        .size([width, height]);
+        .gravity(0)
+        .charge(-10)
+        .size([w, h]);
 
-    d3.json("data/miserables.json", function(error, graph) {
-      if (error) throw error;
+    var nodes = force.nodes(),
+        a = {type: 0, x: 3 * w / 6, y: 2 * h / 6, fixed: true},
+        b = {type: 1, x: 4 * w / 6, y: 4 * h / 6, fixed: true},
+        c = {type: 2, x: 2 * w / 6, y: 4 * h / 6, fixed: true};
 
-      force
-          .nodes(graph.nodes)
-          .links(graph.links)
-          .start();
+    nodes.push(a, b, c);
 
-      var link = svg.selectAll(".link")
-          .data(graph.links)
-        .enter().append("line")
-          .attr("class", "link")
-          .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+    svg.append("svg:rect")
+        .attr("width", w)
+        .attr("height", h);
 
-      var node = svg.selectAll(".node")
-          .data(graph.nodes)
-        .enter().append("circle")
-          .attr("class", "node")
-          .attr("r", 5)
-          .style("fill", function(d) { return color(d.group); })
-          .call(force.drag);
+    svg.selectAll("circle")
+        .data(nodes)
+      .enter().append("svg:circle")
+        .attr("r", 12)
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+        .style("fill", fill)
+        .call(force.drag);
 
-      node.append("title")
-          .text(function(d) { return d.name; });
-
-      force.on("tick", function() {
-        link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-
-        node.attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
+    force.on("tick", function(e) {
+      var k = e.alpha * .1;
+      nodes.forEach(function(node) {
+        var center = nodes[node.type];
+        node.x += (center.x - node.x) * k;
+        node.y += (center.y - node.y) * k;
       });
-    });    
+
+      svg.selectAll("circle")
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+    });
+
+    var p0;
+
+    svg.on("mousemove", function() {
+      var p1 = d3.mouse(this),
+          node = {
+              type: Math.random() * 3 | 0,
+              x: p1[0],
+              y: p1[1],
+              px: (p0 || (p0 = p1))[0],
+              py: p0[1]
+          };
+
+      p0 = p1;
+
+      svg.append("svg:circle")
+          .data([node])
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; })
+          .attr("r", 4.5)
+          .style("fill", fill)
+        .transition()
+          .delay(3000)
+          .attr("r", 1e-6)
+          .each("end", function() { nodes.splice(3, 1); })
+          .remove();
+
+      nodes.push(node);
+      force.start();
+    });
+
+    function fill(d) {
+      return color(d.type);
+    }
+    
 };
