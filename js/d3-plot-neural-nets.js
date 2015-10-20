@@ -131,7 +131,7 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
                 .attr('y2', srcNode.y)
                 .attr('class', 'link')
                 .style('stroke', '#FFF')
-                .attr('marker-end', 'url(#arrowhead)')            
+                .attr('marker-end', 'url(#arrowhead)')         
                 .transition()
                 .duration(500)
                 .attr('x2', dstNode.x - (Math.cos(angle) * (radius-1)))
@@ -207,8 +207,10 @@ function plotBezier(points, svg, id) {
         n = points.length;
     
     var line = d3.svg.line().x(x).y(y);
-    var curve = svg.append("path").attr("class", "curve").attr("id", id);
-
+    var curve = svg.append("path")
+        .attr("class", "curve")
+        .attr("id", id);
+ 
     update();
     var last = 0;
     d3.timer(function(elapsed) {
