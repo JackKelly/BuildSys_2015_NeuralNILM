@@ -1,7 +1,7 @@
 ## Installation
 
 ```
-sudo apt-get install nodejs nodejs-legacy npm
+sudo apt-get install nodejs-legacy npm
 sudo npm install -g grunt-cli http-server bower
 bower install
 ```

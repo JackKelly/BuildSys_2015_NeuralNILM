@@ -213,7 +213,7 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, recurrentLay
 
 pt.plotRecurrent = pt.plotRecurrent || {};
 
-var bezier = {},
+var bezier = [],
     points = [
         {x: 20, y: 250},
         {x: 20, y: 30},
@@ -226,13 +226,18 @@ var bezier = {},
 
 
 pt.plotRecurrent.plot = function() {
+    /* From: http://bl.ocks.org/joyrexus/5715642
+     */
+
+    
     'use strict';
 
     var w = pt.outerWidth,
-        h = pt.outerHeight,
-        n = 4,
-        orders = d3.range(5, n + 2);
+        h = pt.outerHeight;
+//        n = 4,
+//        orders = d3.range(5, n + 2);
 
+/*    
     var svg = d3.select("#recurrent .placeholder").selectAll("svg")
         .data(orders)
       .enter().append("svg:svg")
@@ -240,37 +245,34 @@ pt.plotRecurrent.plot = function() {
         .attr("height", h)
       .append("svg:g")
         .attr("transform", "translate(0,0)");
+*/
+    var svg = d3.select("#recurrent .placeholder").append("svg")
+        .attr("width", w)
+        .attr("height", h);
     
     var line = d3.svg.line().x(x).y(y);
+    var curve = svg.append("path").attr("class", "curve");
 
     update();
     var last = 0;
     d3.timer(function(elapsed) {
-        t = (t + (elapsed - last) / 5000) % 1;
+        t = (t + (elapsed - last) / 1000) % 1;
         last = elapsed;
         update();
     });
     
     function update() {
-        var curve = svg.selectAll("path.curve")
-            .data(getCurve);
-        
-        curve.enter().append("svg:path")
-            .attr("class", "curve");
-        
-        curve.attr("d", line);
+        svg.select("path.curve").attr("d", line(getCurve()));
     }
 
-    function getCurve(d) {
-        var curve = bezier[d];
-        if (!curve) {
-            curve = bezier[d] = [];
+    function getCurve() {
+        if (bezier.length == 0) {
             for (var t_=0; t_<=1; t_+=delta) {
-                var x = getLevels(d, t_);
-                curve.push(x[x.length-1][0]);
+                var x = getLevels(5, t_);
+                bezier.push(x[x.length-1][0]);
             }
         }
-        return [curve.slice(0, t / delta + 1)];
+        return bezier.slice(0, t / delta + 1);
     }
 
     function getLevels(d, t_) {
@@ -279,7 +281,6 @@ pt.plotRecurrent.plot = function() {
         for (var i=1; i<d; i++) {
             x.push(interpolate(x[x.length-1], t_));
         }
-        console.log(x);
         return x;
     }
 
