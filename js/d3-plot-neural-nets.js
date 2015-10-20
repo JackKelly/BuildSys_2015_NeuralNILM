@@ -21,19 +21,10 @@ pt.plotNeuralNets.init = function() {
 
     var force = d3.layout.force()
         .gravity(0)
-        .charge(-10)
+        .charge(2)
         .size([w, h]);
 
-    var nodes = force.nodes(),
-        a = {type: 0, x: 3 * w / 6, y: 2 * h / 6, fixed: true},
-        b = {type: 1, x: 4 * w / 6, y: 4 * h / 6, fixed: true},
-        c = {type: 2, x: 2 * w / 6, y: 4 * h / 6, fixed: true};
-
-    nodes.push(a, b, c);
-
-    svg.append("svg:rect")
-        .attr("width", w)
-        .attr("height", h);
+    var nodes = force.nodes();
 
     svg.selectAll("circle")
         .data(nodes)
@@ -47,9 +38,8 @@ pt.plotNeuralNets.init = function() {
     force.on("tick", function(e) {
       var k = e.alpha * .1;
       nodes.forEach(function(node) {
-        var center = nodes[node.type];
-        node.x += (center.x - node.x) * k;
-        node.y += (center.y - node.y) * k;
+        node.x += (node.targetX - node.x) * k;
+        node.y += (node.targetY - node.y) * k;
       });
 
       svg.selectAll("circle")
@@ -57,38 +47,29 @@ pt.plotNeuralNets.init = function() {
           .attr("cy", function(d) { return d.y; });
     });
 
-    var p0;
+    // Add first layer
+    for (var i=1; i<5; i++) {
+        var node = {
+            layer:0,
+            x:0,
+            y:0,
+            targetX:10,
+            targetY:i*20
+        };
 
-    svg.on("mousemove", function() {
-      var p1 = d3.mouse(this),
-          node = {
-              type: Math.random() * 3 | 0,
-              x: p1[0],
-              y: p1[1],
-              px: (p0 || (p0 = p1))[0],
-              py: p0[1]
-          };
+        svg.append("svg:circle")
+            .data([node])
+            .attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; })
+            .attr("r", 4.5)
+            .style("fill", fill);
 
-      p0 = p1;
-
-      svg.append("svg:circle")
-          .data([node])
-          .attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; })
-          .attr("r", 4.5)
-          .style("fill", fill)
-        .transition()
-          .delay(3000)
-          .attr("r", 1e-6)
-          .each("end", function() { nodes.splice(3, 1); })
-          .remove();
-
-      nodes.push(node);
-      force.start();
-    });
+        nodes.push(node);
+        force.start();
+    };
 
     function fill(d) {
-      return color(d.type);
+      return color(d.layer);
     }
     
 };
