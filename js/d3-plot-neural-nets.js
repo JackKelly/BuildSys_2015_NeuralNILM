@@ -7,13 +7,23 @@ pt.plotAutoEncoder.svg = null;
 pt.plotAutoEncoder.init = function() {
     'use strict';
 
-    var w = pt.outerWidth;
-    var h = pt.outerHeight;
+    var w = pt.outerWidth,
+        h = pt.outerHeight;
     
     var svg = d3.select('#autoencoder .placeholder')
         .append('svg')
-        .attr("width", pt.outerWidth)
-        .attr("height", pt.outerHeight);
+        .attr("width", w)
+        .attr("height", h);
+
+    pt.plotAutoEncoder.svg = svg;
+};
+
+pt.plotAutoEncoder.plot = function() {
+    'use strict';
+
+    var w = pt.outerWidth,
+        h = pt.outerHeight,
+        svg = pt.plotAutoEncoder.svg;
 
     // Need to define groups for circles and lines to ensure
     // that the lines get drawn *under* the circles because
@@ -33,14 +43,12 @@ pt.plotAutoEncoder.init = function() {
         .append("path")
             .attr("d", "M 0,0 V 4 L6,2 Z"); //this is actual shape for arrowhead
     
-    pt.plotAutoEncoder.svg = svg;
-    
     var color = d3.scale.category10();
 
     var force = d3.layout.force()
         .gravity(0)
         .charge(-5)
-        .size([w, h]);
+        .size([pt.outerWidth, pt.outerHeight]);
 
     var dx = 100, dy = 50, radius=10;
     var nodes = force.nodes();
@@ -106,7 +114,7 @@ pt.plotAutoEncoder.init = function() {
 
     // Draw connections
     function addConnections(srcLayer, dstLayer) {
-        var timer = setInterval(addConnection, 100);
+        var timer = setInterval(addConnection, 50);
         var layer = 0, unit = 0, nextLayerUnit = 0;  
         function addConnection() {
             var numUnits = numUnitsPerLayer[layer];

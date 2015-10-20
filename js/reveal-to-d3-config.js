@@ -23,6 +23,10 @@ pt.slideIdToFunctions = {
         'init': function() {
             'use strict';
             pt.plotAutoEncoder.init();
-        }
+        },
+        0: function() {
+            'use strict';
+            pt.plotAutoEncoder.plot();
+        }        
     }    
 };
