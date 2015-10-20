@@ -18,8 +18,9 @@ pt.plotNeuralNet.init = function(cssID) {
     pt.plotNeuralNet.svg = svg;
 };
 
-pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName) {
+pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, recurrentLayers) {
     'use strict';
+    var recurrentLayers = recurrentLayers || [];
 
     var w = pt.outerWidth,
         h = pt.outerHeight,
@@ -112,7 +113,7 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName) {
     } 
 
     // Draw connections
-    function addConnections(srcLayer, dstLayer) {
+    function addConnections() {
         var timer = setInterval(addConnection, 50);
         var layer = 0, unit = 0, nextLayerUnit = 0;  
         function addConnection() {
@@ -145,6 +146,7 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName) {
                     layer++;
                     if (layer == numLayers-1) {
                         clearInterval(timer);
+                        addRecurrentConnections();
                         addLabels();
                     }
                 }
@@ -152,6 +154,23 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName) {
         }                
     }
 
+    // Recurrent Layers
+    function addRecurrentConnections() {
+        if (recurrentLayers) {
+            var timer = setInterval(addRecurrentConnection, 50);
+        }
+        var recurrentLayerI = 0, unit = 0, dstUnit = 0;  
+        function addRecurrentConnection() {
+            var layer = recurrentLayers[recurrentLayerI];
+            var numUnits = numUnitsPerLayer[layer];
+            var srcNode = getNode(layer, unit);
+            var dstNode = getNode(layer, dstUnit);
+            
+            // Increment counters
+        }                        
+    }
+    
+    // Labels
     function addLabels() {
         function addText(text, x, y, timeout) {
             setTimeout(function() {
@@ -190,4 +209,97 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName) {
       return color(d.layer);
     }
     
+};
+
+pt.plotRecurrent = pt.plotRecurrent || {};
+
+var bezier = {},
+    points = [
+        {x: 20, y: 250},
+        {x: 20, y: 30},
+        {x: 100, y: 20},
+        {x: 200, y: 250},
+        {x: 225, y: 125}
+    ],
+    delta = .01,
+    t = .5;
+
+
+pt.plotRecurrent.plot = function() {
+    'use strict';
+
+    var w = pt.outerWidth,
+        h = pt.outerHeight,
+        n = 4,
+        orders = d3.range(5, n + 2);
+
+    var svg = d3.select("#recurrent .placeholder").selectAll("svg")
+        .data(orders)
+      .enter().append("svg:svg")
+        .attr("width", w)
+        .attr("height", h)
+      .append("svg:g")
+        .attr("transform", "translate(0,0)");
+    
+    var line = d3.svg.line().x(x).y(y);
+
+    update();
+    var last = 0;
+    d3.timer(function(elapsed) {
+        t = (t + (elapsed - last) / 5000) % 1;
+        last = elapsed;
+        update();
+    });
+    
+    function update() {
+        var curve = svg.selectAll("path.curve")
+            .data(getCurve);
+        
+        curve.enter().append("svg:path")
+            .attr("class", "curve");
+        
+        curve.attr("d", line);
+    }
+
+    function getCurve(d) {
+        var curve = bezier[d];
+        if (!curve) {
+            curve = bezier[d] = [];
+            for (var t_=0; t_<=1; t_+=delta) {
+                var x = getLevels(d, t_);
+                curve.push(x[x.length-1][0]);
+            }
+        }
+        return [curve.slice(0, t / delta + 1)];
+    }
+
+    function getLevels(d, t_) {
+        if (arguments.length < 2) t_ = t;
+        var x = [points.slice(0, d)];
+        for (var i=1; i<d; i++) {
+            x.push(interpolate(x[x.length-1], t_));
+        }
+        console.log(x);
+        return x;
+    }
+
+    function interpolate(d, p) {
+        if (arguments.length < 2) p = t;
+        var r = [];
+        for (var i=1; i<d.length; i++) {
+            var d0 = d[i-1], d1 = d[i];
+            r.push(
+                {x: d0.x + (d1.x - d0.x) * p,
+                 y: d0.y + (d1.y - d0.y) * p}
+            );
+        }
+        return r;
+    }    
+    
+    function fill(d) {
+      return color(d.layer);
+    }
+
+    function x(d) { return d.x; }
+    function y(d) { return d.y; }
 };

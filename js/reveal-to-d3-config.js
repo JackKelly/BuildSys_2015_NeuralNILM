@@ -40,5 +40,15 @@ pt.slideIdToFunctions = {
             var numUnitsPerLayer = [7, 5, 3, 5, 7];            
             pt.plotNeuralNet.plot(numUnitsPerLayer, "Code Layer");
         }        
-    }    
+    },
+    'recurrent': {
+        'init': function() {
+            'use strict';
+            // pt.plotNeuralNet.init('#recurrent');
+        },
+        0: function() {
+            'use strict';
+            pt.plotRecurrent.plot();
+        }
+    }        
 };
