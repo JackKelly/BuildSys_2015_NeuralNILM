@@ -19,14 +19,26 @@ pt.slideIdToFunctions = {
             d3.csv('data/washer_raw.csv', pt.plotPowerData.morph);
         }
     },
-    'autoencoder': {
+    'neuralnet': {
         'init': function() {
             'use strict';
-            pt.plotAutoEncoder.init();
+            pt.plotNeuralNet.init('#neuralnet');
         },
         0: function() {
             'use strict';
-            pt.plotAutoEncoder.plot();
+            var numUnitsPerLayer = [7, 7, 5, 5, 3];
+            pt.plotNeuralNet.plot(numUnitsPerLayer, "Hidden Layers");
+        }        
+    },    
+    'autoencoder': {
+        'init': function() {
+            'use strict';
+            pt.plotNeuralNet.init('#autoencoder');
+        },
+        0: function() {
+            'use strict';
+            var numUnitsPerLayer = [7, 5, 3, 5, 7];            
+            pt.plotNeuralNet.plot(numUnitsPerLayer, "Code Layer");
         }        
     }    
 };

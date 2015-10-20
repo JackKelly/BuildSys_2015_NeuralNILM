@@ -1,29 +1,29 @@
 var pt = pt || {};
 
-pt.plotAutoEncoder = pt.plotAutoEncoder || {};
+pt.plotNeuralNet = pt.plotNeuralNet || {};
 
-pt.plotAutoEncoder.svg = null;
+pt.plotNeuralNet.svg = null;
 
-pt.plotAutoEncoder.init = function() {
+pt.plotNeuralNet.init = function(cssID) {
     'use strict';
 
     var w = pt.outerWidth,
         h = pt.outerHeight;
     
-    var svg = d3.select('#autoencoder .placeholder')
+    var svg = d3.select(cssID + ' .placeholder')
         .append('svg')
         .attr("width", w)
         .attr("height", h);
 
-    pt.plotAutoEncoder.svg = svg;
+    pt.plotNeuralNet.svg = svg;
 };
 
-pt.plotAutoEncoder.plot = function() {
+pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName) {
     'use strict';
 
     var w = pt.outerWidth,
         h = pt.outerHeight,
-        svg = pt.plotAutoEncoder.svg;
+        svg = pt.plotNeuralNet.svg;
 
     // Need to define groups for circles and lines to ensure
     // that the lines get drawn *under* the circles because
@@ -53,7 +53,6 @@ pt.plotAutoEncoder.plot = function() {
     var dx = 100, dy = 50, radius=10;
     var nodes = force.nodes();
 
-    var numUnitsPerLayer = [7, 5, 3, 5, 7];
     var numLayers = numUnitsPerLayer.length;
     var maxUnits = d3.max(numUnitsPerLayer);
     
@@ -170,7 +169,12 @@ pt.plotAutoEncoder.plot = function() {
             
         }
         addText("Input Layer", 180, 205, 500)
-        addText("Code Layer", w/2, h/1.6, 1000)
+        if (middleLayerName == "Code Layer") {
+            var y = h / 1.6;
+        } else {
+            var y = h / 1.2;
+        }
+        addText(middleLayerName, w / 2, y, 1000)
         addText("Output Layer", 790, 205, 1500)                
     }
 
