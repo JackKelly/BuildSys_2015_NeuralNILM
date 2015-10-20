@@ -19,10 +19,10 @@ pt.slideIdToFunctions = {
             d3.csv('data/washer_raw.csv', pt.plotPowerData.morph);
         }
     },
-    'neural-net-1': {
+    'autoencoder': {
         'init': function() {
             'use strict';
-            pt.plotNeuralNets.init();
+            pt.plotAutoEncoder.init();
         }
     }    
 };

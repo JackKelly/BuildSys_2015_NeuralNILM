@@ -38,7 +38,14 @@
   stroke-width: 1.5px;
 }
 
+#arrowhead,
 .link {
   stroke: #999;
   stroke-opacity: .6;
+  fill: #999;
+}
+
+.nn-label {
+    font: 23px sans-serif;
+    fill: #999;
 }
