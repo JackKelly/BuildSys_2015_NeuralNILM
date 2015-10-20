@@ -2,20 +2,14 @@ var pt = pt || {};
 
 pt.plotPowerData = pt.plotPowerData || {};
 
-pt.margin = {top: 20, right: 30, bottom: 30, left: 100};
-pt.outer_width = 960;
-pt.outer_height = 500;
-pt.inner_width = pt.outer_width - pt.margin.left - pt.margin.right;
-pt.inner_height = pt.outer_height - pt.margin.top - pt.margin.bottom;
-
 pt.plotPowerData.svg = null;
 
 pt.plotPowerData.init = function() {
     'use strict';
 
-    pt.plotPowerData.x = d3.scale.linear().range([0, pt.inner_width]);
+    pt.plotPowerData.x = d3.scale.linear().range([0, pt.innerWidth]);
 
-    pt.plotPowerData.y = d3.scale.linear().range([pt.inner_height, 0]);
+    pt.plotPowerData.y = d3.scale.linear().range([pt.innerHeight, 0]);
 
     pt.plotPowerData.xAxis = d3.svg.axis()
         .scale(pt.plotPowerData.x)
@@ -35,8 +29,8 @@ pt.plotPowerData.init = function() {
 
     pt.plotPowerData.svg = d3.select('#washer .placeholder')
         .append('svg')
-        .attr("width", pt.outer_width)
-        .attr("height", pt.outer_height);
+        .attr("width", pt.outerWidth)
+        .attr("height", pt.outerHeight);
     
     pt.plotPowerData.chart = pt.plotPowerData.svg.append("g")
         .attr("transform", "translate(" + pt.margin.left + "," + pt.margin.top +")");
@@ -61,7 +55,7 @@ pt.plotPowerData.axes = function(error, data) {
     // X AXIS
     pt.plotPowerData.chart.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + pt.inner_height + ")")
+        .attr("transform", "translate(0," + pt.innerHeight + ")")
         .call(pt.plotPowerData.xAxis);
 
     // Y AXIS
@@ -70,7 +64,7 @@ pt.plotPowerData.axes = function(error, data) {
         .call(pt.plotPowerData.yAxis)
       .append("text")
         .attr("y", -100)
-        .attr("x", -pt.inner_height/2)
+        .attr("x", -pt.innerHeight/2)
         .attr("transform", "rotate(-90)")
         .attr("dy", ".71em")
         .style("text-anchor", "middle")

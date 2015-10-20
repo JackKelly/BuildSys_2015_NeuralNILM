@@ -7,7 +7,6 @@ pt.handleEvent = function(isSlideEvent) {
 
   var currentSlideId = Reveal.getCurrentSlide().id;
   var currentFragment = Reveal.getIndices().f;
-  console.log(currentFragment);
 
   // Don't go any further if the slide has no ID (i.e. the string is empty).
   if (!currentSlideId) {

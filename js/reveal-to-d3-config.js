@@ -18,5 +18,11 @@ pt.slideIdToFunctions = {
             'use strict';
             d3.csv('data/washer_raw.csv', pt.plotPowerData.morph);
         }
-    }
+    },
+    'neural-net-1': {
+        'init': function() {
+            'use strict';
+            pt.plotNeuralNets.init();
+        }
+    }    
 };
