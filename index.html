@@ -56,6 +56,36 @@
           </p>
         </section>
 
+        <section id="outline">
+          <h1>Outline</h1>
+          <ol style="width:70%">
+            <li class="fragment">Why deep neural nets (DNNs) for
+              NILM?</li>
+            <!-- Describe *what* DNNs are good at. -->
+            <li class="fragment">How DNNs work</li>            
+            <li class="fragment">Three DNN architectures for NILM</li>
+            <li class="fragment">Data augmentation</li>
+            <li class="fragment">Results</li>
+            <li class="fragment">Conclusions &amp; future work</li>            
+          </ol>
+        </section>
+
+        <!-- ******************************************************
+        In this section, describe *what* DNNs are good at (not how). 
+        ******************************************************** -->
+        
+        <section id="why-dnns-for-nilm">
+          <h1 class="dim">Outline</h1>
+          <ol style="width:70%">
+            <li>Why deep neural nets (DNNs) for NILM?</li>
+            <li class="dim">How DNNs work</li>            
+            <li class="dim">Three DNN architectures for NILM</li>
+            <li class="dim">Data augmentation</li>            
+            <li class="dim">Results</li>
+            <li class="dim">Conclusions &amp; future work</li>            
+          </ol>
+        </section>        
+        
         <section id="washer">
           <h1>Name the Appliance?</h1>
           <p class="placeholder"></p>
@@ -63,10 +93,56 @@
           <span class="fragment"></span>          
         </section>
 
+        <section>
+          <h1>Feature Learning</h1>
+          <!-- TODO:
+          Show examples of feature learning from vision (face parts).
+          Compare to 'old' vision research which used SIFT etc...
+          Also examples from ASR, machine translation etc...
+          DNNs learn a hierarchy of feature extractors.
+          -->
+        </section>
+
+        <!-- ******************************************************
+                           *HOW* DNNS work...
+        ******************************************************** -->
+        
+        <section id="how-dnns-work">
+          <h1 class="dim">Outline</h1>
+          <ol style="width:70%">
+            <li class="dim">Why deep neural nets (DNNs) for NILM?</li>
+            <li>How DNNs work</li>            
+            <li class="dim">Three DNN architectures for NILM</li>
+            <li class="dim">Data augmentation</li>
+            <li class="dim">Results</li>
+            <li class="dim">Conclusions &amp; future work</li>            
+          </ol>
+        </section>
+
+        <section>
+          <h1>The Artificial Neuron</h1>
+          <!-- TODO:
+          Basic overview.  Weights, bias. Sum inputs. Nonlinearity.
+          ** D3 (low priority): flow of info through neuron **
+          -->
+        </section>
+        
         <section id="neuralnet">
           <h1>Feed Forward Nets</h1>
           <p class="placeholder"></p>
           <span class="fragment"></span>
+        </section>
+
+        <section>
+          <h1>Training</h1>
+          <!--
+          Need to learn the weights and biases.
+          With 100M learnable parameters, it's not tractable to do an 
+          exhaustive search or a random search.
+          So use gradient descent.
+          Back prop.
+          ** D3 (low priority): gradient descent & back-prop **
+          -->
         </section>
         
         <section id="autoencoder">
@@ -75,13 +151,185 @@
           <span class="fragment"></span>
         </section>
 
+        <section>
+          <h1>Autoencoders</h1>
+          <h2>Examples</h2>
+          <!-- Hinton's 2006 paper on reconstructing faces.-->
+        </section>
+
+        <section>
+          <h1>Denoising Autoencoders</h1>
+          <!-- Examples from literature.-->
+        </section>
+        
         <section id="recurrent">
           <h1>Recurrent Neural Nets</h1>
           <p class="placeholder"></p>
           <span class="fragment"></span>
           <span class="fragment"></span>          
         </section>
+
+        <section>
+          <h1>Recurrent Neural Nets</h1>
+          <h2>Long Short-Term Memory (LSTM)</h2>
+          <!-- 
+          *** D3 (low priority): LSTM animation ***
+          -->
+        </section>
         
+        <section>
+          <h1>Recurrent Neural Nets</h1>
+          <h2>Examples</h2>
+          <!-- Great for *sequences*. 
+          ASR, machine translation, handwriting recognition -->
+        </section>
+
+        <!-- ******************************************************
+                           Three DNN ARCHITECTURES FOR NILM
+        ******************************************************** -->
+        
+        <section id="dnn-architectures-for-nilm">
+          <h1 class="dim">Outline</h1>
+          <ol style="width:70%">
+            <li class="dim">Why deep neural nets (DNNs) for NILM?</li>
+            <li class="dim">How DNNs work</li>            
+            <li>Three DNN architectures for NILM
+              <ol>
+                <li>Recurrent Neural Nets (LSTM)</li>
+                <li>Denoising Autoencoder</li>
+                <li>'Bounding rectangle' around the target</li>
+              </ol>
+            </li>
+            <li class="dim">Data augmentation</li>            
+            <li class="dim">Results</li>
+            <li class="dim">Conclusions &amp; future work</li>            
+          </ol>
+        </section>        
+
+        <section>
+          <h1>Recurrent Neural Nets (LSTM)</h1>
+          <!-- 
+          ***** D3 (high priority) ******
+          re-draw RNN animation, but quickly.  Then animate aggregate
+          and output moving, sample by sample upwards.
+          Highlight the connections as data flows through, especially
+          RNN connections.
+          -->
+        </section>
+
+        <section>
+          <h1>Denoising Autoencoders</h1>
+          <!-- 
+          ***** D3 (high priority) ******
+          re-draw AE animation, but quickly.  Then animate aggregate
+          and output moving, stride by stride upwards.
+          Highlight the connections as data flows through.
+          -->
+        </section>
+
+        <section>
+          <h1>Bounding Rectangle</h1>
+          <!-- 
+          ***** D3 (high priority) ******
+          re-draw feed forward animation, but quickly, and with 3
+          outputs. Then animate aggregate
+          and output moving, stride by stride upwards.
+          Highlight the connections as data flows through.
+          Illustrate rectangle.
+          -->
+        </section>
+
+
+        <!-- ******************************************************
+                           DATA AUGMENTATION
+        ******************************************************** -->
+        
+        <section>
+          <h1 class="dim">Outline</h1>
+          <ol style="width:70%">
+            <li class="dim">Why deep neural nets (DNNs) for NILM?</li>
+            <li class="dim">How DNNs work</li>            
+            <li class="dim">Three DNN architectures for NILM</li>
+            <li>Data augmentation</li>
+            <li class="dim">Results</li>
+            <li class="dim">Conclusions &amp; future work</li>            
+          </ol>
+        </section>        
+
+        <section>
+          <h1>Data Augmentation</h1>
+          <!-- TODO:
+          Examples from vision (pics from plankton?) and ASR.
+          -->
+        </section>
+
+        <section>
+          <h1>Data Augmentation</h1>
+          <!-- TODO:
+          *** D3 (medium priority): illustrate data augmentation ***
+          Maybe just a flow chart: start with real appliance-level
+          data, extract activations into a set per appliance type,
+          etc...
+          Show several examples?
+          -->
+        </section>
+
+
+
+        <!-- ******************************************************
+                                   RESULTS
+        ******************************************************** -->
+        
+        <section>
+          <h1 class="dim">Outline</h1>
+          <ol style="width:70%">
+            <li class="dim">Why deep neural nets (DNNs) for NILM?</li>
+            <li class="dim">How DNNs work</li>            
+            <li class="dim">Three DNN architectures for NILM</li>
+            <li class="dim">Data augmentation</li>
+            <li>Results</li>
+            <li class="dim">Conclusions &amp; future work</li>            
+          </ol>
+        </section>        
+
+        <section>
+          <h1>Example Outputs</h1>
+          <!-- TODO:
+          *** D3 (high priority): ***
+          plot aggregate, ground truth, and estimates from all classifiers.
+          -->
+        </section>
+
+        <section>
+          <h1>Metrics</h1>
+          <!-- TODO:
+          *** D3 (medium priority): ***
+          Start without D3: just show zooms of figure in paper.
+          -->
+        </section>
+        
+
+        <!-- ******************************************************
+                                   CONCLUSIONS
+        ******************************************************** -->
+        
+        <section>
+          <h1 class="dim">Outline</h1>
+          <ol style="width:70%">
+            <li class="dim">Why deep neural nets (DNNs) for NILM?</li>
+            <li class="dim">How DNNs work</li>            
+            <li class="dim">Three DNN architectures for NILM</li>
+            <li class="dim">Data augmentation</li>
+            <li class="dim">Results</li>
+            <li>Conclusions &amp; future work</li>            
+          </ol>
+        </section>        
+
+        <section>
+          <h1>Conclusions &amp; Future Work</h1>
+          <!-- TODO: from paper -->
+        </section>
+
       </div>
 
     </div>

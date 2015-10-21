@@ -7,6 +7,11 @@
   text-transform: none; /* Remove capitalisation */
 }
 
+.dim,
+h1.dim {
+    color: #555;
+}
+
 /* Charts */
 .axis path,
 .axis line {
