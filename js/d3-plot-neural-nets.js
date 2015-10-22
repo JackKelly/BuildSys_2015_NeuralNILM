@@ -283,7 +283,7 @@ pt.plotNeuralNet.plotRecurrent = function(recurrentLayers, fast) {
     'use strict';
 
     var fast = false || fast;
-    var recurrentDuration = fast ? 50 : 250;
+    var recurrentDuration = fast ? 20 : 250;
     var svg = pt.plotNeuralNet.svg.select("g.lines");
     if (recurrentLayers) {
         var timer = setInterval(addRecurrentConnection, recurrentDuration);
