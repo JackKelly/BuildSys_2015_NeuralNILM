@@ -80,6 +80,43 @@ pt.slideIdToFunctions = {
             );
         },
         1: function() {
+            // Draw 'input line'
+            var xOffset = 25;            
+            var y = pt.plotNeuralNet.nodes[0].targetY;
+            pt.plotNeuralNet.svg.select('g.lines').append('line')
+                .attr('class', 'link')
+                .attr('x1', xOffset)
+                .attr('x2', pt.plotNeuralNet.nodes[0].targetX - 12)
+                .attr('y1', y)
+                .attr('y2', y)
+                .attr('marker-end', 'url(#arrowhead)');
+
+            // Draw 'output line'
+            var xOffset = 25;
+            var lastNode = pt.plotNeuralNet.nodes[pt.plotNeuralNet.nodes.length-1];
+            var y = lastNode.targetY;
+            pt.plotNeuralNet.svg.select('g.lines').append('line')
+                .attr('class', 'link')
+                .attr('x1', lastNode.targetX + 12)
+                .attr('x2', 790)
+                .attr('y1', y)
+                .attr('y2', y)
+                .attr('marker-end', 'url(#arrowhead)');
+            
+            pt.plotNeuralNet.svg.append("text")
+                .attr("x", 10)
+                .attr("y", 20)
+                .attr("class", "nn-label")
+                .text("Aggregate input");
+            
+            pt.plotNeuralNet.svg.append("text")
+                .attr("x", 800)
+                .attr("y", 20)
+                .attr("class", "nn-label")
+                .text("Target output");            
+            
+        },
+        2: function() {
             'use strict';
 
             // Plot aggregate
@@ -89,29 +126,19 @@ pt.slideIdToFunctions = {
                 "aggregate",           // cssID
                 xOffset                // x
             );
-            d3.csv('data/washer_raw.csv', aggregatePlotFunc);
+            d3.csv('data/mains.csv', aggregatePlotFunc);
 
             // Plot target
+            var yClip = pt.plotNeuralNet.nodes[pt.plotNeuralNet.nodes.length-1].targetY;
             var targetPlotFunc = pt.plotPowerDataVertical.init(
                 pt.plotNeuralNet.svg,  // SVG
                 "target",              // cssID
-                800                    // x
+                800,                   // x
+                yClip
             );
-            d3.csv('data/washer_steady_states.csv', targetPlotFunc);
-
-            // Draw 'input line'
-            var y = pt.plotNeuralNet.nodes[0].targetY;
-            pt.plotNeuralNet.svg.select('g.lines').append('line')
-                .attr('class', 'link')
-                .attr('x1', xOffset + 200)
-                .attr('x2', pt.plotNeuralNet.nodes[0].targetX - 12)
-                .attr('y1', y)
-                .attr('y2', y)
-//                .style('stroke', 'white')
-                .attr('marker-end', 'url(#arrowhead)');
-            
+            d3.csv('data/washer_disag_target.csv', targetPlotFunc);            
         },
-        2: function() {
+        3: function() {
             pt.plotNeuralNet.svg = null;
         }
     }    

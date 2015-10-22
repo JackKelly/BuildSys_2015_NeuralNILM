@@ -137,16 +137,21 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy, fast, in
             var srcNode = getNode(layer, unit);
             var dstNode = getNode(layer+1, nextLayerUnit);
             var angle = Math.atan((dstNode.y - srcNode.y) / (dstNode.x - srcNode.x));
+
+            /* TODO: make colour transition last longer, e.g. using this trick:
+               https://gist.github.com/mbostock/6081914 */
             
-            lines.append("svg:line")
+            var line = lines.append("svg:line")
                 .attr('x1', srcNode.x)
                 .attr('y1', srcNode.y)
                 .attr('x2', srcNode.x)
                 .attr('y2', srcNode.y)
                 .attr('class', 'link')
                 .style('stroke', '#FFF')
-                .attr('marker-end', 'url(#arrowhead)')         
-                .transition()
+                .attr('marker-end', 'url(#arrowhead)');
+
+            // Animate extension of line and colour
+            line.transition()
                 .duration(500)
                 .attr('x2', dstNode.x - (Math.cos(angle) * (radius-1)))
                 .attr('y2', dstNode.y - (Math.sin(angle) * (radius-1)))

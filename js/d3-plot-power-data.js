@@ -141,25 +141,31 @@ pt.plotPowerDataVertical = pt.plotPowerDataVertical || {};
 
 pt.plotPowerDataVertical.width = 200;
 
-pt.plotPowerDataVertical.init = function(svg, cssID, x, y) {
+pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip) {
     'use strict';
 
     x = (x == null ? 0 : x);
-    y = (y == null ? 0 : y);
+    yClip = (yClip == null ? pt.innerHeight : yClip);
+
+    var shiftDown = 50;
     
+    if (svg.select("defs clippath #clip" + cssID)[0][0] == null) {
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip" + cssID)
+          .append("rect")
+            .attr("width", pt.plotPowerDataVertical.width)
+            .attr("height", yClip - shiftDown);
+    }
+
     var chart = svg.append('g')
         .attr('id', cssID)
-        .attr('transform', 'translate(' + x + ',' + y + ')')
+        .attr("clip-path", "url(#clip" + cssID + ")")
+        .attr('transform', 'translate(' + x + ',' + shiftDown + ')')
+        .append("g");
     
     var xScale = d3.scale.linear().range([0, pt.plotPowerDataVertical.width]);
 
     var yScale = d3.scale.linear().range([0, pt.innerHeight]);
-
-    /* lineFunction will be a function which takes data in the form
-       [{seconds: 20, watts: 34}] and returns a set of paths. */
-    var lineFunction = d3.svg.line()
-        .x(function(d) { return xScale(d.watts); })    
-        .y(function(d) { return yScale(d.seconds); });
 
     var plotFunc = function(error, data) {
         'use strict';
@@ -174,9 +180,34 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, y) {
             d.watts = +d.watts;
         });
 
-        xScale.domain(d3.extent(data, function(d) { return d.watts; }));    
-        yScale.domain(d3.extent(data, function(d) { return d.seconds; }));
+        var zoom = 2,
+            startI = data.length / zoom,
+            samplePeriod = 6;
 
+        /* lineFunction will be a function which takes data in the form
+           [{seconds: 20, watts: 34}] and returns a set of paths. */
+        var lineFunction = d3.svg.line()
+            .x(function(d) { return xScale(d.watts); }) 
+            .y(function(d) { return yScale(d.seconds); });
+        
+        xScale.domain(d3.extent(data, function(d) { return d.watts; }));
+        var totalSecs = d3.max(data, function(d) { return d.seconds; })
+        yScale.domain([0, totalSecs / zoom]);
+
+        // TODO: nice gradient at the top of the clip mask so the
+        // line fades out towards the top.
+        // https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Clipping_and_masking
+        // also in ~/Dropbox/manuals/SVG
+        
+        // Animate upwards
+        chart
+            .attr('transform', 'translate(0,-100)')
+            .transition()
+            .ease("linear")
+            .duration(50000)
+            .attr('transform', 'translate(0,-500)');
+            
+        
         // Interpolation function
         function pathTweenGenerator(d) {
             return function pathTween() {
@@ -193,7 +224,8 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, y) {
                 };
             };
         }
-
+        
+        
         // ADD LINE
         chart.append("path")
             .attr('class', 'line')
@@ -202,6 +234,7 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, y) {
             .duration(1000)
             .ease("linear")
             .attrTween("d", pathTweenGenerator(data));
+
     };
 
     return plotFunc;
