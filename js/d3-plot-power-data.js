@@ -141,7 +141,9 @@ pt.plotPowerDataVertical = pt.plotPowerDataVertical || {};
 
 pt.plotPowerDataVertical.width = 200;
 
-pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip) {
+pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback) {
+    /* Parameters
+       jerkUp : bool, if true the jerk the data upwards */
     'use strict';
 
     x = (x == null ? 0 : x);
@@ -200,13 +202,31 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip) {
         // also in ~/Dropbox/manuals/SVG
         
         // Animate upwards
-        chart
-            .attr('transform', 'translate(0,-100)')
-            .transition()
-            .ease("linear")
-            .duration(50000)
-            .attr('transform', 'translate(0,-500)');
-            
+        chart.attr('transform', 'translate(0,-100)');
+
+        if (jerkUp) {
+            var upwardsTranslation = -100;
+            var interval = setInterval(
+                function() {
+                    upwardsTranslation -= 50;
+                    chart
+                        .transition()
+                        .duration(100)
+                        .attr('transform', 'translate(0,' + upwardsTranslation + ')');
+                    if (upwardsTranslation <= -300) {
+                        clearInterval(interval);
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                }, 2000);
+        } else {
+            chart
+              .transition()
+                .ease("linear")
+                .duration(50000)
+                .attr('transform', 'translate(0,-500)');
+        }
         
         // Interpolation function
         function pathTweenGenerator(d) {
@@ -224,7 +244,6 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip) {
                 };
             };
         }
-        
         
         // ADD LINE
         chart.append("path")

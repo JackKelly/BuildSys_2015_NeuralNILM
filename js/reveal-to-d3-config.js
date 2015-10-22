@@ -141,5 +141,83 @@ pt.slideIdToFunctions = {
         3: function() {
             pt.plotNeuralNet.svg = null;
         }
-    }    
+    },
+    'autoencoder-for-nilm': {
+        'init': function() {
+            'use strict';
+            pt.plotNeuralNet.init('#autoencoder-for-nilm');
+        },
+        0: function() {
+            'use strict';
+            var numUnitsPerLayer = [7, 5, 3, 5, 7];
+            var dy = 40;
+            var fast = true;
+            var includeLabels = false;
+            var moveDown = 100;
+            pt.plotNeuralNet.plot(
+                numUnitsPerLayer, "Code Layer", dy, fast, includeLabels, moveDown);
+        },
+        1: function() {
+            // Input rectangle
+            pt.plotNeuralNet.svg.append("rect")
+                .attr("width", 230)
+                .attr("height", 260)
+                .attr("x", 25)
+                .attr("y", 130)
+                .attr("fill", "#999")
+                .attr("fill-opacity", 0.4);
+
+            // Output rectangle
+            pt.plotNeuralNet.svg.append("rect")
+                .attr("width", 230)
+                .attr("height", 260)
+                .attr("x", 750)
+                .attr("y", 130)
+                .attr("fill", "#999")
+                .attr("fill-opacity", 0.4);
+
+            pt.plotNeuralNet.svg.append("text")
+                .attr("x", 40)
+                .attr("y", 20)
+                .attr("class", "nn-label")
+                .text("Aggregate input");
+            
+            pt.plotNeuralNet.svg.append("text")
+                .attr("x", 800)
+                .attr("y", 20)
+                .attr("class", "nn-label")
+                .text("Target output");            
+            
+        },
+        2: function() {
+            'use strict';
+
+            // Plot aggregate
+            var xOffset = 25;
+            var jerkUp = true;
+            var aggregatePlotFunc = pt.plotPowerDataVertical.init(
+                pt.plotNeuralNet.svg,  // SVG
+                "aggregateAE",           // cssID
+                xOffset,               // x
+                null,
+                jerkUp
+            );
+            d3.csv('data/mains.csv', aggregatePlotFunc);
+
+            // Plot target
+            var callback = function() {
+                pt.plotNeuralNet.svg = null;
+            }
+            var yClip = pt.plotNeuralNet.nodes[pt.plotNeuralNet.nodes.length-1].targetY;
+            var targetPlotFunc = pt.plotPowerDataVertical.init(
+                pt.plotNeuralNet.svg,  // SVG
+                "targetAE",              // cssID
+                760,                   // x
+                null,
+                jerkUp,
+                callback
+            );
+            d3.csv('data/washer_disag_target.csv', targetPlotFunc);            
+        }
+    }
 };

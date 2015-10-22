@@ -18,7 +18,8 @@ pt.plotNeuralNet.init = function(cssID) {
     pt.plotNeuralNet.svg = svg;
 };
 
-pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy, fast, includeLabels) {
+pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName,
+                                 dy, fast, includeLabels, moveDown) {
     /*
       Parameters
       ----------
@@ -27,6 +28,7 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy, fast, in
       dy : float, vertical gap between neurons
       fast : bool, true if you want the animation to run quickly
       includeLabels : bool, trus if you want labels
+      moveDown : number, move entire plot downwards
      */
     'use strict';
     pt.plotNeuralNet.numUnitsPerLayer = numUnitsPerLayer;
@@ -36,6 +38,10 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy, fast, in
     var w = pt.outerWidth,
         h = pt.outerHeight,
         svg = pt.plotNeuralNet.svg;
+
+    if (moveDown != null) {
+        svg = svg.append("g").attr("transform", "translate(0," + moveDown + ")");
+    }
 
     // Need to define groups for circles and lines to ensure
     // that the lines get drawn *under* the circles because
