@@ -59,5 +59,27 @@ pt.slideIdToFunctions = {
             pt.plotNeuralNet.plotRecurrent([1,2]);
             pt.plotNeuralNet.svg = null;
         }        
-    }        
+    },
+    'rnns-for-nilm': {
+        'init': function() {
+            'use strict';
+            pt.plotNeuralNet.init('#rnns-for-nilm');
+        },
+        0: function() {
+            'use strict';
+            var numUnitsPerLayer = [1, 5, 5, 3, 1];
+            var dy = 70;
+            var fast = true;
+            var includeLabels = false;
+            pt.plotNeuralNet.plot(numUnitsPerLayer, "Recurrent Layers", dy, fast, includeLabels);
+            setTimeout(
+                function() { pt.plotNeuralNet.plotRecurrent([1,2], fast); },
+                1000
+            );
+        },
+        1: function() {
+            'use strict';
+            pt.plotNeuralNet.svg = null;
+        }        
+    }    
 };

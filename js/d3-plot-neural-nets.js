@@ -1,5 +1,4 @@
 var pt = pt || {};
-var RECURRENT_DURATION = 250;
 
 pt.plotNeuralNet = pt.plotNeuralNet || {};
 
@@ -19,9 +18,20 @@ pt.plotNeuralNet.init = function(cssID) {
     pt.plotNeuralNet.svg = svg;
 };
 
-pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
+pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy, fast, includeLabels) {
+    /*
+      Parameters
+      ----------
+      numUnitsPerLayer : list of ints
+      middleLayerName : string
+      dy : float, vertical gap between neurons
+      fast : bool, true if you want the animation to run quickly
+      includeLabels : bool, trus if you want labels
+     */
     'use strict';
     pt.plotNeuralNet.numUnitsPerLayer = numUnitsPerLayer;
+    var fast = fast || false;
+    var includeLabels = (includeLabels == null ? true : includeLabels);
 
     var w = pt.outerWidth,
         h = pt.outerHeight,
@@ -68,12 +78,13 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
         .style("fill", fill)
         .call(force.drag);
 
+    var speed = fast ? 1.0 : 0.1;
     force.on("tick", function(e) {
-      var k = e.alpha * .1;
-      nodes.forEach(function(node) {
-        node.x += (node.targetX - node.x) * k;
-        node.y += (node.targetY - node.y) * k;
-      });
+        var k = e.alpha * speed;
+        nodes.forEach(function(node) {
+            node.x += (node.targetX - node.x) * k;
+            node.y += (node.targetY - node.y) * k;
+        });
 
       circles.selectAll("circle")
             .attr("cx", function(d) { return d.x; })
@@ -82,13 +93,15 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
     });
     
     // Draw neurons
-    var layer = 0;    
-    var timer = setInterval(addNeuron, 100);
+    var layer = 0;
+    var interval = fast ? 10 : 100;
+    var timer = setInterval(addNeuron, interval);
     var xOffset = (w - ((numLayers-1) * dx)) / 2;
     function addNeuron() {
         if (layer == numLayers) {
             clearInterval(timer);
-            setTimeout(addConnections, 1000);            
+            var timeout = fast ? 750 : 1000;
+            setTimeout(addConnections, timeout);            
         };        
         var numUnits = numUnitsPerLayer[layer];
 
@@ -116,7 +129,8 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
 
     // Draw connections
     function addConnections() {
-        var timer = setInterval(addConnection, 50);
+        var interval = fast ? 25 : 50;
+        var timer = setInterval(addConnection, interval);
         var layer = 0, unit = 0, nextLayerUnit = 0;  
         function addConnection() {
             var numUnits = numUnitsPerLayer[layer];
@@ -148,7 +162,9 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
                     layer++;
                     if (layer == numLayers-1) {
                         clearInterval(timer);
-                        addLabels();
+                        if (includeLabels) {
+                            addLabels();
+                        }
                     }
                 }
             }
@@ -198,7 +214,7 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName, dy) {
 };
 
 
-function plotBezier(points, svg, id) {
+function plotBezier(points, svg, id, duration) {
     /* Adapted from: http://bl.ocks.org/joyrexus/5715642 */
     
     var bezier = [],
@@ -214,7 +230,7 @@ function plotBezier(points, svg, id) {
     update();
     var last = 0;
     d3.timer(function(elapsed) {
-        t = t + (elapsed - last) / RECURRENT_DURATION;
+        t = t + (elapsed - last) / duration;
         last = elapsed;
         update();
     });
@@ -263,12 +279,14 @@ function plotBezier(points, svg, id) {
     function y(d) { return d.y; }
 }
 
-pt.plotNeuralNet.plotRecurrent = function(recurrentLayers) {    
+pt.plotNeuralNet.plotRecurrent = function(recurrentLayers, fast) {    
     'use strict';
 
+    var fast = false || fast;
+    var recurrentDuration = fast ? 50 : 250;
     var svg = pt.plotNeuralNet.svg.select("g.lines");
     if (recurrentLayers) {
-        var timer = setInterval(addRecurrentConnection, RECURRENT_DURATION);
+        var timer = setInterval(addRecurrentConnection, recurrentDuration);
     }
     var recurrentLayerI = 0, srcUnit = 0, dstUnit = 0;  
     function addRecurrentConnection() {
@@ -285,7 +303,7 @@ pt.plotNeuralNet.plotRecurrent = function(recurrentLayers) {
         ];
 
         var id = "layer" + layer + "srcUnit" + srcUnit + "dstUnit" + dstUnit;
-        plotBezier(points, svg, id);
+        plotBezier(points, svg, id, recurrentDuration);
         svg.select("#"+id)
             .transition()
             .duration(1000)
