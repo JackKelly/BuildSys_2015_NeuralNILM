@@ -159,6 +159,8 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback,
             .attr("height", yClip - shiftDown);
     }
 
+    var upwardsTranslation = 200;    
+    
     var chart = svg.append('g')
         .attr('id', cssID)
         .attr("clip-path", "url(#clip" + cssID + ")")
@@ -170,20 +172,21 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback,
             .attr("id", "clipBoundingBox" + cssID)
             .append("rect")
             .attr("width", 230)
-            .attr("height", 260);
+            .attr("height", 320);
 
         var rect = svg.append('g')
             .attr('id', cssID + 'rect')
             .attr("clip-path", "url(#clipBoundingBox" + cssID + ")")
-            .attr('transform', 'translate(' + x + ',' + (shiftDown + 80) + ')')
-            .append("g");
+            .attr('transform', 'translate(' + x + ',' + (shiftDown + 50) + ')')
+            .append("g")
+            .attr('transform', 'translate(0,' + (upwardsTranslation + 100) + ')');        
 
         rect
             .append("rect")
             .attr("width", 60)
-            .attr("height", 358)
+            .attr("height", 270)
             .attr("x", 0)
-            .attr("y", 148)
+            .attr("y", 93)
             .attr("fill", "steelblue")
             .attr("fill-opacity", 0.5);
     }
@@ -205,7 +208,7 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback,
             d.watts = +d.watts;
         });
 
-        var zoom = 2,
+        var zoom = 1.5,
             startI = data.length / zoom,
             samplePeriod = 6;
 
@@ -225,34 +228,36 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback,
         // also in ~/Dropbox/manuals/SVG
         
         // Animate upwards
-        chart.attr('transform', 'translate(0,-100)');
 
         if (jerkUp) {
-            var upwardsTranslation = -100;
-            var interval = setInterval(
-                function() {
-                    upwardsTranslation -= 50;
-                    chart
+
+            // Set initial positions
+            chart.attr('transform', 'translate(0,' + (upwardsTranslation) + ')');
+
+            // Transform
+            var setTransform = function() {
+                chart
+                    .transition()
+                    .duration(100)
+                    .attr('transform', 'translate(0,' + (upwardsTranslation) + ')');
+
+                if (plotRect) {                       
+                    rect
                         .transition()
                         .duration(100)
-                        .attr('transform', 'translate(0,' + (upwardsTranslation) + ')');
+                        .attr('transform', 'translate(0,' + (upwardsTranslation + 100) + ')');
 
-                    if (plotRect) {
-                        
-                        rect
-                            .transition()
-                            .duration(100)
-                            .attr('transform', 'translate(0,' + (upwardsTranslation + 100) + ')');
-
+                }                    
+                if (upwardsTranslation <= -150) {
+                    clearInterval(interval);
+                    if (callback) {
+                        callback();
                     }
-                    
-                    if (upwardsTranslation <= -500) {
-                        clearInterval(interval);
-                        if (callback) {
-                            callback();
-                        }
-                    }
-                }, 2000);
+                }
+                upwardsTranslation -= 50;                
+            };
+            setTransform();
+            var interval = setInterval(setTransform, 2000);
         } else {
             chart
               .transition()

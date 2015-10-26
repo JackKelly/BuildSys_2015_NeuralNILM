@@ -161,18 +161,18 @@ pt.slideIdToFunctions = {
             // Input rectangle
             pt.plotNeuralNet.svg.append("rect")
                 .attr("width", 230)
-                .attr("height", 260)
+                .attr("height", 320)
                 .attr("x", 25)
-                .attr("y", 130)
+                .attr("y", 100)
                 .attr("fill", "#999")
                 .attr("fill-opacity", 0.4);
 
             // Output rectangle
             pt.plotNeuralNet.svg.append("rect")
                 .attr("width", 230)
-                .attr("height", 260)
+                .attr("height", 320)
                 .attr("x", 750)
-                .attr("y", 130)
+                .attr("y", 100)
                 .attr("fill", "#999")
                 .attr("fill-opacity", 0.4);
 
@@ -239,18 +239,18 @@ pt.slideIdToFunctions = {
             // Input rectangle
             pt.plotNeuralNet.svg.append("rect")
                 .attr("width", 230)
-                .attr("height", 260)
+                .attr("height", 320)
                 .attr("x", 25)
-                .attr("y", 130)
+                .attr("y", 100)
                 .attr("fill", "#999")
                 .attr("fill-opacity", 0.4);
 
             // Output rectangle
             pt.plotNeuralNet.svg.append("rect")
                 .attr("width", 230)
-                .attr("height", 260)
+                .attr("height", 320)
                 .attr("x", 750)
-                .attr("y", 130)
+                .attr("y", 100)
                 .attr("fill", "#999")
                 .attr("fill-opacity", 0.4);
 
