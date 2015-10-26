@@ -94,7 +94,8 @@
         </section>
 
         <section>
-          <h1>Feature Learning</h1>
+          <h1>Face Recognition</h2>
+          <h2 class="fragment">Manual Feature Extraction</h3>
           <!-- TODO:
           Show examples of feature learning from vision (face parts).
           Compare to 'old' vision research which used SIFT etc...
@@ -103,6 +104,53 @@
           -->
         </section>
 
+        <section>
+          <img src="images/hart1.jpg">
+          <p class="tiny fragment">
+            <a href="http://www.georgehart.com/research/hartbiog.html">
+              georgehart.com/research/hartbiog.html</a>
+          </p>
+          <!--- D3 TODO (medium priority)
+              Animate detecting eyes, nose, mouth, measuring distances.
+              --->
+        </section>
+
+        <section>
+          <img src="images/hart2.jpg" height=600>
+          <p class="tiny">
+            <a href="http://scgp.stonybrook.edu/archives/8516">
+              scgp.stonybrook.edu/archives/8516</a>
+          </p>
+        </section>
+
+        <section>
+          <h1>SIFT</h1>
+          <p>Scale-Invariant Feature Transform</p>
+          <img src="images/sift_keypoints.jpg">
+          <p class="tiny">
+            Image from: <a href="http://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_feature2d/py_sift_intro/py_sift_intro.html">
+              OpenCV-Python Tutorials: Introduction to SIFT</a>
+          </p>
+          <p class="tiny">
+              David G. Lowe (1999) Object recognition from local
+              scale-invariant
+              features. ICCV'99. DOI:<a href="http://dx.doi.org/10.1109/ICCV.1999.790410">10.1109/ICCV.1999.790410</a>
+              <br>Cited by 10,106 papers!
+          </p>          
+        </section>
+
+        <section>
+          <h1>Deep Neural Nets</h1>
+          <h2>Automatic Feature Learning</h2>
+        </section>
+        
+        <section>
+          <img src="images/faces.png">
+          <img class="fragment" src="images/cars.png">
+          <img class="fragment" src="images/chairs.png">          
+        </section>
+
+        
         <!-- ******************************************************
                            *HOW* DNNS work...
         ******************************************************** -->
@@ -121,8 +169,9 @@
 
         <section>
           <h1>The Artificial Neuron</h1>
+          <img src="images/ArtificialNeuronModel.png">
+          <p class="tiny">Image adapted from <a href="https://en.wikibooks.org/wiki/File:ArtificialNeuronModel_english.png">WikiMedia Commons image by Chrislb</a></p>
           <!-- TODO:
-          Basic overview.  Weights, bias. Sum inputs. Nonlinearity.
           ** D3 (low priority): flow of info through neuron **
           -->
         </section>
@@ -136,6 +185,16 @@
         <section>
           <h1>Training</h1>
           <!--
+          TODO: 
+          Simple diagram showing:
+
+                            target ---|
+                                      V
+          input -> net -> output -> compare
+                    ^                 |
+                    |                 V
+                    \---- adjust weights
+
           Need to learn the weights and biases.
           With 100M learnable parameters, it's not tractable to do an 
           exhaustive search or a random search.
@@ -152,14 +211,35 @@
         </section>
 
         <section>
-          <h1>Autoencoders</h1>
-          <h2>Examples</h2>
+          <h2>Autoencoder Examples</h2>
+          <div style="height: 600px;">
+          <img class="fragment current-visible"
+               style="position:absolute; transform: translate(-50%, 0);"
+               src="images/HintonAE.png" height=560>
+          <img class="fragment current-visible"
+               style="position:absolute; transform: translate(-50%, 50%);"               
+               src="images/HintonAEexamples.png" width=1100>
+          </div>
+          <p class="tiny">Hinton &amp; Salakhutdinov. <strong>Reducing the
+          dimensionality of data with neural
+          networks.</strong> <em>Science</em> (2006)</p>
+          <!-- Hinton's 2006 paper on reconstructing faces.-->
+        </section>
+        
+        <section>
+          <h2>Autoencoder Examples</h2>
+          <img src="images/learned_features.gif" height=550>
+          <p class="tiny">Animation by <a href="http://www.cs.toronto.edu/~ranzato/research/projects.html#sparse_coding">Marc'Aurelio Ranzato</a></p>
           <!-- Hinton's 2006 paper on reconstructing faces.-->
         </section>
 
         <section>
           <h1>Denoising Autoencoders</h1>
           <!-- Examples from literature.-->
+          <img src="images/peppers.png">
+          <p class="tiny">Image from <a href="http://www.cs.toronto.edu/~ranzato/research/projects.html">Marc'Aurelio Ranzato</a></p>          
+          <p class="tiny">Vincent <em>et al.</em> <strong>Extracting and composing robust features
+          with denoising autoencoders.</strong> <em>ICML</em> (2008)</p>
         </section>
         
         <section id="recurrent">
@@ -239,12 +319,8 @@
           <span class="fragment"></span>
           <span class="fragment"></span>          
           <!-- 
-          ***** D3 (high priority) ******
-          re-draw feed forward animation, but quickly, and with 3
-          outputs. Then animate aggregate
-          and output moving, stride by stride upwards.
+          ***** D3 (low priority) ******
           Highlight the connections as data flows through.
-          Illustrate rectangle.
           -->
         </section>
 

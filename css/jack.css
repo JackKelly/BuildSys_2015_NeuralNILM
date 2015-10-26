@@ -12,6 +12,10 @@ h1.dim {
     color: #555;
 }
 
+.reveal section .tiny {
+    font-size: 20px;
+}
+
 /* Charts */
 .axis path,
 .axis line {
@@ -55,4 +59,11 @@ h1.dim {
 .nn-label {
     font: 23px sans-serif;
     fill: #999;
+}
+
+
+/****** IMAGES ********/
+
+.reveal section img {
+    border: none;
 }
