@@ -141,7 +141,7 @@ pt.plotPowerDataVertical = pt.plotPowerDataVertical || {};
 
 pt.plotPowerDataVertical.width = 200;
 
-pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback) {
+pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback, plotRect) {
     /* Parameters
        jerkUp : bool, if true the jerk the data upwards */
     'use strict';
@@ -164,6 +164,29 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback)
         .attr("clip-path", "url(#clip" + cssID + ")")
         .attr('transform', 'translate(' + x + ',' + shiftDown + ')')
         .append("g");
+
+    if (plotRect) {
+        svg.append("defs").append("clipPath")
+            .attr("id", "clipBoundingBox" + cssID)
+            .append("rect")
+            .attr("width", 230)
+            .attr("height", 260);
+
+        var rect = svg.append('g')
+            .attr('id', cssID + 'rect')
+            .attr("clip-path", "url(#clipBoundingBox" + cssID + ")")
+            .attr('transform', 'translate(' + x + ',' + (shiftDown + 80) + ')')
+            .append("g");
+
+        rect
+            .append("rect")
+            .attr("width", 60)
+            .attr("height", 358)
+            .attr("x", 0)
+            .attr("y", 148)
+            .attr("fill", "steelblue")
+            .attr("fill-opacity", 0.5);
+    }
     
     var xScale = d3.scale.linear().range([0, pt.plotPowerDataVertical.width]);
 
@@ -212,8 +235,18 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback)
                     chart
                         .transition()
                         .duration(100)
-                        .attr('transform', 'translate(0,' + upwardsTranslation + ')');
-                    if (upwardsTranslation <= -300) {
+                        .attr('transform', 'translate(0,' + (upwardsTranslation) + ')');
+
+                    if (plotRect) {
+                        
+                        rect
+                            .transition()
+                            .duration(100)
+                            .attr('transform', 'translate(0,' + (upwardsTranslation + 100) + ')');
+
+                    }
+                    
+                    if (upwardsTranslation <= -500) {
                         clearInterval(interval);
                         if (callback) {
                             callback();
