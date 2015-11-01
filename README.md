@@ -1,4 +1,4 @@
-The presentation of my
+This repository holds the source code for my the presentation of my
 [Neural NILM paper](http://jack-kelly.com/files/writing/neural_nilm.pdf)
 for [ACM BuildSys 2015](http://www.buildsys.org/2015/) in November
 2015.
