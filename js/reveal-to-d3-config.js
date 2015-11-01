@@ -297,7 +297,6 @@ pt.slideIdToFunctions = {
                 true  // plot rectangle
             );
             d3.csv('data/washer_disag_target.csv', targetPlotFunc);
-
         }
     }    
 };
