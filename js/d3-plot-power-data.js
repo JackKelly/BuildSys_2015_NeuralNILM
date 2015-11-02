@@ -24,7 +24,7 @@ pt.plotPowerData.init = function() {
        and returns a set of paths.
     */
     pt.plotPowerData.lineFunction = d3.svg.line()
-        .x(function(d) { return pt.plotPowerData.x(d.seconds); })
+        .x(function(d) { return pt.plotPowerData.x(d.seconds / 60); })
         .y(function(d) { return pt.plotPowerData.y(d.watts); });
 
     pt.plotPowerData.svg = d3.select('#washer .placeholder')
@@ -49,14 +49,20 @@ pt.plotPowerData.axes = function(error, data) {
         d.watts = +d.watts;  // coerce to number type.
     });
     
-    pt.plotPowerData.x.domain(d3.extent(data, function(d) { return d.seconds; }));
+    pt.plotPowerData.x.domain(d3.extent(data, function(d) { return d.seconds / 60; }));
     pt.plotPowerData.y.domain(d3.extent(data, function(d) { return d.watts; }));
 
     // X AXIS
     pt.plotPowerData.chart.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + pt.innerHeight + ")")
-        .call(pt.plotPowerData.xAxis);
+        .call(pt.plotPowerData.xAxis)
+      .append("text")
+        .attr("y", 50)
+        .attr("x", pt.innerWidth/2)
+        .attr("dy", ".71em")
+        .style("text-anchor", "middle")
+        .text("Time (minutes)");    
 
     // Y AXIS
     pt.plotPowerData.chart.append("g")
