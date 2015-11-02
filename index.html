@@ -171,8 +171,8 @@
         </section>
         
         <section>
-          <img src="images/imagenetResults.png" height=600>
-          <p class="tiny">Image from devblogs.nvidia.com</p>
+          <img src="images/imagenetResults.png" width="90%">
+          <p class="tiny">Image from <a href="http://devblogs.nvidia.com/parallelforall/mocha-jl-deep-learning-julia/">devblogs.nvidia.com</a></p>
         </section>        
         
         <!-- ******************************************************
@@ -217,17 +217,8 @@
         
         <section>
           <h1>Training</h1>
+          <object data="images/training.svg" type="image/svg+xml"></object>
           <!--
-          TODO: 
-          Simple diagram showing:
-
-                            target ---|
-                                      V
-          input -> net -> output -> compare
-                    ^                 |
-                    |                 V
-                    \---- adjust weights
-
           Need to learn the weights and biases.
           With 100M learnable parameters, it's not tractable to do an 
           exhaustive search or a random search.
@@ -236,8 +227,6 @@
           ** D3 (low priority): gradient descent & back-prop **
           -->
         </section>
-
-        <!-- TODO: Krivehsky's architecture -->
         
         <section id="autoencoder">
           <h1>Autoencoders</h1>
