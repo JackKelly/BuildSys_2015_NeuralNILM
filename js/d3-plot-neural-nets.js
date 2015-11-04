@@ -106,7 +106,7 @@ pt.plotNeuralNet.plot = function(numUnitsPerLayer, middleLayerName,
     function addNeuron() {
         if (layer == numLayers) {
             clearInterval(timer);
-            var timeout = fast ? 750 : 1000;
+            var timeout = fast ? 1000 : 1000;
             setTimeout(addConnections, timeout);            
         };        
         var numUnits = numUnitsPerLayer[layer];

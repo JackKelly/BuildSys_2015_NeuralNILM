@@ -6,7 +6,7 @@ Reveal.initialize({
     history: true,
     center: true,
 
-    transition: 'slide', // none/fade/slide/convex/concave/zoom
+    transition: 'none', // none/fade/slide/convex/concave/zoom
 
     // The "normal" size of the presentation, aspect ratio will be preserved
     // when the presentation is scaled to fit different resolutions. Can be

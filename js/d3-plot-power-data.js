@@ -185,12 +185,12 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback,
             .attr("clip-path", "url(#clipBoundingBox" + cssID + ")")
             .attr('transform', 'translate(' + x + ',' + (shiftDown + 50) + ')')
             .append("g")
-            .attr('transform', 'translate(0,' + (upwardsTranslation + 100) + ')');        
+            .attr('transform', 'translate(0,' + (upwardsTranslation + 70) + ')');        
 
         rect
             .append("rect")
             .attr("width", 60)
-            .attr("height", 270)
+            .attr("height", 235)
             .attr("x", 0)
             .attr("y", 93)
             .attr("fill", "steelblue")
@@ -251,7 +251,7 @@ pt.plotPowerDataVertical.init = function(svg, cssID, x, yClip, jerkUp, callback,
                     rect
                         .transition()
                         .duration(100)
-                        .attr('transform', 'translate(0,' + (upwardsTranslation + 100) + ')');
+                        .attr('transform', 'translate(0,' + (upwardsTranslation + 70) + ')');
 
                 }                    
                 if (upwardsTranslation <= -150) {
