@@ -4,7 +4,7 @@ for [ACM BuildSys 2015](http://www.buildsys.org/2015/) in November
 2015.
 
 If you just want to view this presentation, just point your browser to
-[http://jackkelly.github.io/BuildSys_2015_NeuralNILM](jackkelly.github.io/BuildSys_2015_NeuralNILM);
+[jackkelly.github.io/BuildSys_2015_NeuralNILM](http://jackkelly.github.io/BuildSys_2015_NeuralNILM);
 you do not have to clone this repository just to view the presentation.
 
 ---
